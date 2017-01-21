@@ -3,6 +3,10 @@ body {
 }
 
 canvas {
-    background: #fff;
+    background: none;
     margin: 20px;
+}
+
+.buttons {
+    padding: 10px;
 }
