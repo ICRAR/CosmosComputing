@@ -40,30 +40,54 @@ for (var y = 0; y < h; ++y) {
 } 
 
 drawBoard();
-
+/********* COLOUR SETUP ************/
+var colourMap= new Map();
 var current_colour = 'black'
 $("#chooseBlackColour").click(function chooseBlack(){
     current_colour = 'black';
     console.log('Black chosen');
 });
+colourMap.set('black', [1,8,12,14,17,21,23,26,30,33,38,42]);
 
 $("#chooseRedColour").click(function(e){
     current_colour = 'red';
     console.log('Red chosen');
 });
+colourMap.set('red', [7,9,16,24,34,40]);
 
 $("#chooseBlueColour").click(function(e){
     current_colour = 'blue';
     console.log('Blue Chosen');
 });
+colourMap.set('blue', [3, 10,15,18,27,35,39]);
 
 $("#chooseYellowColour").click(function(e){
     current_colour = 'yellow';
     console.log('Yellow Chosen');
 });
+colourMap.set('yellow',[6,13,20,25,31,37]);
 
+$("#chooseGreenColour").click(function(e){
+    current_colour = 'green';
+    console.log('Green Chosen');
+});
+colourMap.set('green', [2,11,22,28,36,41]);
+
+$("#choosePinkColour").click(function(e){
+    current_colour = 'pink';
+    console.log('Pink Chosen');
+});
+colourMap.set('pink', [4,29]);
+
+$("#chooseOrangeColour").click(function(e){
+    current_colour = 'orange';
+    console.log('Orange Chosen');
+});
+colourMap.set('orange', [5,19,32]);
 
 var coordinateMap = new Map();
+
+/*******GRID FUNCTIONALITY*******/
 
 $("canvas").click(function(e) {
 
@@ -101,14 +125,16 @@ $("canvas").click(function(e) {
     }
 });
 
+/************* GENERATING INSTRUCSTIONS FUNCTIONALITY ************/
+
 instructions_str = '';
 var map_string = 'map_string\n';
 $("#coordinates").click(function(e){
-    for (var [key, value] of coordinateMap) {
+    /*for (var [key, value] of coordinateMap) {
         console.log(key + " = " + value);
         coord_string = String(key) + ' = ' + value +'\n';
         map_string += coord_string;
-    }
+    }*/
     console.log('Generating Instructions');
     generateInstructions();
     
@@ -140,7 +166,7 @@ $("#coordinates").click(function(e){
                 y_operation_str = 'Add ' + y_instruction + ' to y\n';
             }
             instructions_str +=y_operation_str;
-
+            //TODO Use colourmap and get random number from array
             instructions_str += 'Get colour ' + colour + '\n';
             instructions_str += 'Plot(x,y,' + colour + ')\n';
 
