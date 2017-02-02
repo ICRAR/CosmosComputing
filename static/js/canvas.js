@@ -127,18 +127,13 @@ $("canvas").click(function(e) {
 
 /************* GENERATING INSTRUCSTIONS FUNCTIONALITY ************/
 
-instructions_str = '';
+
 var map_string = 'map_string\n';
 $("#coordinates").click(function(e){
-    /*for (var [key, value] of coordinateMap) {
-        console.log(key + " = " + value);
-        coord_string = String(key) + ' = ' + value +'\n';
-        map_string += coord_string;
-    }*/
-    console.log('Generating Instructions');
-    generateInstructions();
+        generateInstructions();
     
     function generateInstructions() {
+        instructions_str = '';
         x_val = 0;
         y_val = 0;
         console.log('Inside function');
@@ -166,18 +161,19 @@ $("#coordinates").click(function(e){
                 y_operation_str = 'Add ' + y_instruction + ' to y\n';
             }
             instructions_str +=y_operation_str;
-            //TODO Use colourmap and get random number from array
-            instructions_str += 'Get colour ' + colour + '\n';
-            instructions_str += 'Plot(x,y,' + colour + ')\n';
+            var testArray = colourMap.get(colour);
+            var randColour = testArray[Math.floor(Math.random() * testArray.length)];
+            instructions_str += 'Get colour ' + randColour + '\n';
+            instructions_str += 'Plot(x,y,' + randColour + ')\n';
 
             x_val = x_next;
             y_val = y_next;
             console.log(x_val +',' + y_val);
         }
+        $("#instructions").val(instructions_str);
+        $("#instructions").select();
     }
 
-    $("#instructions").append(instructions_str);
-    $("#instructions").select();
 });
 
 /****************Instruction logic************************/
