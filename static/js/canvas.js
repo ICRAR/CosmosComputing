@@ -5,7 +5,8 @@
 
 var bw = 400;
 var bh = 400;
-var size = 40
+var size = 40;
+var boxes = bw/size;
 var p = 10;
 var cw = bw + (p*2) + 1;
 var ch = bh + (p*2) + 1;
@@ -14,21 +15,22 @@ var current_colour = "black"
 
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
-function drawBoard(){
-
-for (var x = 0; x <= bw; x += size) {
-    context.moveTo(0.5 + x + p, p);
-    context.lineTo(0.5 + x + p, bh + p);
-}
-
-
-for (var x = 0; x <= bh; x += size) {
-    context.moveTo(p, 0.5 + x + p);
-    context.lineTo(bw + p, 0.5 + x + p);
-}
-
-context.strokeStyle = "black";
-context.stroke();
+function drawBoard() { 
+    context.beginPath();
+    context.fillStyle = 'white';
+    context.lineWidth = 1;
+    context.strokestyle = 'black';
+    
+    for(var row = 0; row < boxes; row++) {
+        for (var column = 0; column < boxes; column++) {
+            var x = column * size;
+            var y = row * size;
+            context.rect(x,y, size, size);
+            context.fill();
+            context.stroke();
+        }
+    }
+    
 }
 
 var h = bh/size;
@@ -88,61 +90,121 @@ colourMap.set('orange', [5,19,32]);
 var coordinateMap = new Map();
 
 /*******GRID FUNCTIONALITY*******/
-
-$("canvas").click(function(e) {
-
-    function fill(s, gx, gy) {
-        context.fillStyle =s;
-        context.fillRect(gx * size + 10, gy * size + 10, size, size);
-    }
-
-    var mx = e.offsetX;
-    var my = e.offsetY;
-
-    var gx = ~~ (mx / size);
-    var gy = ~~ (my / size);
+var isDrawing=false;
+var isMoving=false;
+//var filled = false;
+                                        
+$("canvas").mousedown(function(e){
+    isDrawing=true;
+    isMoving = false;
+    drawing(e);
     
-    if (gx < 0 || gx >= bw/size || gy <0 || gy >= bh/size){
-        return;
-    }
-
-    if(state[gy][gx]) {
-        state[gy][gx] = false;
-        fill('white', gx,gy);
-
-        var coordinateString = gx + ',' + gy;
-        coordinateMap.delete(coordinateString)
-
-        drawBoard();
-    } else {
-        state[gy][gx]=true;
-        fill(current_colour, gx, gy);
-
-        var coordinateString = gx + ',' + gy;
-        coordinateMap.set(coordinateString, current_colour);
-        drawBoard();
-        console.log(gx + ',' + gy);
+});
+$("canvas").mousemove(function(e) {
+    if(isDrawing){
+        isMoving=true;
+        drawing(e);
     }
 });
+$("canvas").mouseup(function(e){
+        isDrawing = false;
+});
 
-/************* GENERATING INSTRUCSTIONS FUNCTIONALITY ************/
+coordinateArray = [];
+function drawing(element){
+        function fill(s,x,y) {
+            context.fillStyle = s;
+            context.fillRect(Math.floor(x/size) * size, Math.floor(y/size) * size, size, size);
+            }
 
+            // Mouse coordinates
+            var mx = element.offsetX;
+            var my = element.offsetY;
+
+            //Graph coordinates from the grid (e.g. (4, 7) = (gx, gy)
+            var gx = ~~ (mx / size);
+            var gy = ~~ (my / size);
+            
+            if (gx < 0 || gx >= bw/size || gy <0 || gy >= bh/size){
+                return;
+            }
+            
+            if(!isMoving){
+                element_state = state[gy][gx];
+                filled = element_state
+                console.log('not moving');
+            } 
+            
+            if(element_state) {
+                //filled = true;
+                state[gy][gx] = false;
+                fill('white', mx,my);
+                context.stroke();
+    
+                var coordinateString = gx + ',' + gy;
+                coordinateMap.delete(coordinateString)
+                var coordinateIndex = coordinateArray.indexOf(coordinateString);
+                if (coordinateIndex > -1) {
+                        coordinateArray.splice(coordinateIndex, 1);
+                }
+            }
+            else {
+                state[gy][gx]=true;
+                fill(current_colour, mx, my);
+                // Make the lines black for neatnes 
+                context.strokeStyle = 'black';
+                context.stroke();
+                
+                // Generate a string for the coordinate map
+                var coordinateString = gx + ',' + gy;
+                coordinateMap.set(coordinateString, current_colour);
+                coordinateIndex = coordinateArray.indexOf(coordinateString);
+                if(coordinateIndex === -1){
+                    coordinateArray.push(coordinateString);
+                    console.log(coordinateArray);
+                } 
+                filled=true;
+                console.log(coordinateMap);
+            }
+    
+}
+/************* GENERATING INSTRUCTIONS FUNCTIONALITY ************/
+
+function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+         //While there remain elements to shuffle...
+         while (0 !== currentIndex) {
+               // Pick a remaining element
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+                           // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+    return array;
+} 
 
 var map_string = 'map_string\n';
 $("#coordinates").click(function(e){
-        generateInstructions();
+    tmpArray =  shuffle(coordinateArray);
+    console.log(tmpArray);
+    generateInstructions(tmpArray);
     
-    function generateInstructions() {
+    function generateInstructions(randArray) {
         instructions_str = '';
         x_val = 0;
         y_val = 0;
         console.log('Inside function');
-        for(var [key, value] of coordinateMap){
-            x_y_array = key.split(',');
+        for(var index = 0; index < randArray.length; ++index){
+            var value = randArray[index];
+            x_y_array = value.split(',');
             x_next = parseInt(x_y_array[0]);
             y_next = parseInt(x_y_array[1]);
             console.log(x_next + ',' + y_next);
-            colour = value;
+            var tmp = coordinateMap.get(value); 
+            colour = tmp;
 
             x_instruction = x_next - x_val;
             y_instruction = y_next - y_val;

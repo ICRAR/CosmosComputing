@@ -20,5 +20,37 @@ canvas {
     font-size: 18px;
 }
 
+.black-button {
+    background-color: black;
+    color: white;
+}
 
+.red-button{
+background-color: red;
+color:white;}
+
+
+.blue-button{
+background-color: blue;
+color:white;}
+
+.yellow-button{
+background-color: yellow;
+color:black;
+}
+
+.green-button{
+background-color: green;
+color:white;
+}
+
+.pink-button{
+background-color: pink;
+color:white;
+}
+
+.orange-button{
+background-color: orange;
+    color:white;
+}
 
