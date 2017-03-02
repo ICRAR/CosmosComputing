@@ -238,5 +238,10 @@ $("#coordinates").click(function(e){
 
 });
 
+$("#reset").click(function(e){
+    $("#instructions").val('');
+});
+
+
 /****************Instruction logic************************/
 
