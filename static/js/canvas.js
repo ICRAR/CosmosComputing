@@ -128,7 +128,6 @@ function drawing(element){
             if (gx < 0 || gx >= bw/size || gy <0 || gy >= bh/size){
                 return;
             }
-            
             if(!isMoving){
                 element_state = state[gy][gx];
                 filled = element_state
@@ -164,6 +163,7 @@ function drawing(element){
                     console.log(coordinateArray);
                 } 
                 filled=true;
+                //drawBoard();
                 console.log(coordinateMap);
             }
     
@@ -186,7 +186,6 @@ function shuffle(array) {
     return array;
 } 
 
-var map_string = 'map_string\n';
 $("#coordinates").click(function(e){
     tmpArray =  shuffle(coordinateArray);
     console.log(tmpArray);
@@ -240,8 +239,7 @@ $("#coordinates").click(function(e){
 
 $("#reset").click(function(e){
     $("#instructions").val('');
+    drawBoard();
+    coordinateArray=[];
+    coordinateMap.clear();
 });
-
-
-/****************Instruction logic************************/
-
