@@ -168,7 +168,7 @@ function drawing(element){
             }
     
 }
-/************* GENERATING INSTRUCTIONS FUNCTIONALITY ************/
+/************* GENERATING INSTRUCTIONS ************/
 
 function shuffle(array) {
       var currentIndex = array.length, temporaryValue, randomIndex;
