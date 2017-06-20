@@ -8,8 +8,8 @@ var bh = 400;
 var size = 40;
 var boxes = bw/size;
 var p = 10;
-var cw = bw + (p*2) + 1;
-var ch = bh + (p*2) + 1;
+// var cw = bw + (p*2) + 1;
+// var ch = bh + (p*2) + 1;
 var current_colour = "black"
 
 
@@ -42,9 +42,15 @@ for (var y = 0; y < h; ++y) {
 } 
 
 drawBoard();
+
+
+
+
 /********* COLOUR SETUP ************/
 var colourMap= new Map();
 var current_colour = 'black'
+
+
 $("#chooseBlackColour").click(function chooseBlack(){
     current_colour = 'black';
     console.log('Black chosen');
@@ -166,8 +172,35 @@ function drawing(element){
                 //drawBoard();
                 console.log(coordinateMap);
             }
-    
 }
+
+$("#grid").click(function changeGrid(){
+    context.clearRect(0, 0, bw, bh);
+
+    if(size == 25){
+        size = 40;    
+    }
+    else{
+        size = 25;
+    } 
+
+    boxes = bw/size;
+    drawBoard();
+    h = bh/size;
+    w = bw/size;
+
+    state = new Array(h);
+    for (var y = 0; y < h; ++y) {
+    state[y] = new Array(w);
+    }
+    $("#instructions").val('');
+    coordinateArray=[];
+    coordinateMap.clear();
+
+
+console.log('Change grid size');
+});
+
 /************* GENERATING INSTRUCTIONS ************/
 
 function shuffle(array) {
